@@ -1,41 +1,14 @@
-// Smooth scrolling for menu links
-document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        const target = document.querySelector(this.getAttribute('href'));
-
-        target.scrollIntoView({
-            behavior: 'smooth'
-        });
+const bins = document.querySelectorAll('.bin');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in-view'); }
     });
-});
-
-// Welcome message
-window.onload = function() {
-    alert("Welcome to Ashish Refrigeration & Spare Parts");
-};
-
-// Highlight active menu while scrolling
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll("nav a");
-
-window.addEventListener("scroll", () => {
-    let current = "";
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-
-        if (pageYOffset >= sectionTop) {
-            current = section.getAttribute("id");
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.style.color = "white";
-
-        if (link.getAttribute("href") == "#" + current) {
-            link.style.color = "#ffd700";
-        }
-    });
-});
+  }, { threshold: 0.15 });
+  bins.forEach((b, i) => {
+    b.style.transitionDelay = (i % 4 * 0.06) + 's';
+    io.observe(b);
+  });
+} else {
+  bins.forEach(b => b.classList.add('in-view'));
+}
